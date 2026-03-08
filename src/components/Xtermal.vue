@@ -1,5 +1,8 @@
 <template>
 	<div class="xtermal-container">
+		<div class="card-header">
+			<h2>Xterm.js 终端演示</h2>
+		</div>
 		<el-card class="xtermal-card">
 			<template #header>
 				<div class="card-header">
@@ -33,21 +36,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Terminal } from 'xterm'
-import { FitAddon } from 'xterm-addon-fit'
-import 'xterm/css/xterm.css'
-import { Refresh, Document, Location } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { ref, onMounted, onUnmounted } from 'vue';
+import { Terminal } from 'xterm';
+import { FitAddon } from 'xterm-addon-fit';
+import 'xterm/css/xterm.css';
+import { Refresh, Document, Location } from '@element-plus/icons-vue';
+import { ElMessage } from 'element-plus';
 
 // 终端引用
-const terminalRef = ref<HTMLElement>()
+const terminalRef = ref<HTMLElement>();
 // 终端实例
-let terminal: Terminal
+let terminal: Terminal;
 // 适配插件
-let fitAddon: FitAddon
+let fitAddon: FitAddon;
 // 命令输入
-const command = ref('')
+const command = ref('');
 
 // 初始化终端
 onMounted(() => {
@@ -81,71 +84,71 @@ onMounted(() => {
 				brightWhite: '#ffffff',
 			},
 			fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-		})
+		});
 
 		// 创建适配插件
-		fitAddon = new FitAddon()
-		terminal.loadAddon(fitAddon)
+		fitAddon = new FitAddon();
+		terminal.loadAddon(fitAddon);
 
 		// 挂载终端
-		terminal.open(terminalRef.value)
-		fitAddon.fit()
+		terminal.open(terminalRef.value);
+		fitAddon.fit();
 
 		// 初始化终端内容
-		terminal.writeln('Welcome to Xterm.js Terminal Demo')
-		terminal.writeln('Type commands below:')
-		terminal.writeln('')
-		terminal.write('$ ')
+		terminal.writeln('Welcome to Xterm.js Terminal Demo');
+		terminal.writeln('Type commands below:');
+		terminal.writeln('');
+		terminal.write('$ ');
 
 		// 监听窗口大小变化
-		window.addEventListener('resize', handleResize)
+		window.addEventListener('resize', handleResize);
 
 		// 监听终端输入
 		terminal.onData((data) => {
-			handleTerminalData(data)
-		})
+			handleTerminalData(data);
+		});
 	}
-})
+});
 
 // 清理资源
 onUnmounted(() => {
-	window.removeEventListener('resize', handleResize)
-	terminal.dispose()
-})
+	window.removeEventListener('resize', handleResize);
+	terminal.dispose();
+});
 
 // 处理窗口大小变化
 const handleResize = () => {
-	fitAddon.fit()
-}
+	fitAddon.fit();
+};
 
 // 处理终端输入
 const handleTerminalData = (data: string) => {
 	switch (data) {
 		case '\r': // 回车
-			terminal.writeln('')
-			executeCommand(command.value)
-			command.value = ''
+			terminal.writeln('');
+			executeCommand(command.value);
+			command.value = '';
 			// 不在这里显示提示符，而是在executeCommand执行完毕后显示
-			break
+			break;
 		case '\x7f': // 退格
 			if (command.value.length > 0) {
-				command.value = command.value.slice(0, -1)
-				terminal.write('\b \b')
+				command.value = command.value.slice(0, -1);
+				terminal.write('\b \b');
 			}
-			break
+			break;
 		default: // 其他字符
-			command.value += data
-			terminal.write(data)
-			break
+			command.value += data;
+			terminal.write(data);
+			break;
 	}
-}
+};
 
 // 执行命令
 const executeCommand = (cmd: string) => {
 	if (!cmd.trim()) {
 		// 如果命令为空，直接显示新的提示符
-		terminal.write('$ ')
-		return
+		terminal.write('$ ');
+		return;
 	}
 
 	// 模拟命令执行
@@ -153,87 +156,93 @@ const executeCommand = (cmd: string) => {
 		switch (cmd.trim()) {
 			case 'ls':
 			case 'ls -la':
-				terminal.writeln('total 20')
-				terminal.writeln('drwxr-xr-x  5 user  staff   160 Mar  8 10:00 \x1b[36m.\x1b[0m')
-				terminal.writeln('drwxr-xr-x  3 user  staff    96 Mar  8 09:00 \x1b[36m..\x1b[0m')
-				terminal.writeln('-rw-r--r--  1 user  staff   245 Mar  8 09:30 \x1b[96mpackage.json\x1b[0m')
-				terminal.writeln('-rw-r--r--  1 user  staff  1024 Mar  8 09:45 \x1b[96mREADME.md\x1b[0m')
-				terminal.writeln('drwxr-xr-x 10 user  staff   320 Mar  8 10:00 \x1b[36msrc\x1b[0m')
+				terminal.writeln('total 20');
+				terminal.writeln('drwxr-xr-x  5 user  staff   160 Mar  8 10:00 \x1b[36m.\x1b[0m');
+				terminal.writeln('drwxr-xr-x  3 user  staff    96 Mar  8 09:00 \x1b[36m..\x1b[0m');
+				terminal.writeln(
+					'-rw-r--r--  1 user  staff   245 Mar  8 09:30 \x1b[96mpackage.json\x1b[0m',
+				);
+				terminal.writeln(
+					'-rw-r--r--  1 user  staff  1024 Mar  8 09:45 \x1b[96mREADME.md\x1b[0m',
+				);
+				terminal.writeln('drwxr-xr-x 10 user  staff   320 Mar  8 10:00 \x1b[36msrc\x1b[0m');
 				// 命令执行完毕后显示新的提示符
-				terminal.write('$ ')
-				break
+				terminal.write('$ ');
+				break;
 			case 'pwd':
-				terminal.writeln('\x1b[96m/home/user/project\x1b[0m')
+				terminal.writeln('\x1b[96m/home/user/project\x1b[0m');
 				// 命令执行完毕后显示新的提示符
-				terminal.write('$ ')
-				break
+				terminal.write('$ ');
+				break;
 			case 'clear':
-				terminal.clear()
-				terminal.writeln('Welcome to Xterm.js Terminal Demo')
-				terminal.writeln('Type commands below:')
-				terminal.writeln('')
+				terminal.clear();
+				terminal.writeln('Welcome to Xterm.js Terminal Demo');
+				terminal.writeln('Type commands below:');
+				terminal.writeln('');
 				// 命令执行完毕后显示新的提示符
-				terminal.write('$ ')
-				break
+				terminal.write('$ ');
+				break;
 			case 'help':
-				terminal.writeln('Available commands:')
-				terminal.writeln('  \x1b[32mls\x1b[0m       - List files and directories')
-				terminal.writeln('  \x1b[32mls -la\x1b[0m   - List files and directories with details')
-				terminal.writeln('  \x1b[32mpwd\x1b[0m      - Print current working directory')
-				terminal.writeln('  \x1b[32mclear\x1b[0m    - Clear terminal')
-				terminal.writeln('  \x1b[32mhelp\x1b[0m     - Show this help message')
+				terminal.writeln('Available commands:');
+				terminal.writeln('  \x1b[32mls\x1b[0m       - List files and directories');
+				terminal.writeln(
+					'  \x1b[32mls -la\x1b[0m   - List files and directories with details',
+				);
+				terminal.writeln('  \x1b[32mpwd\x1b[0m      - Print current working directory');
+				terminal.writeln('  \x1b[32mclear\x1b[0m    - Clear terminal');
+				terminal.writeln('  \x1b[32mhelp\x1b[0m     - Show this help message');
 				// 命令执行完毕后显示新的提示符
-				terminal.write('$ ')
-				break
+				terminal.write('$ ');
+				break;
 			default:
-				terminal.writeln(`\x1b[31mCommand not found:\x1b[0m ${cmd}`)
+				terminal.writeln(`\x1b[31mCommand not found:\x1b[0m ${cmd}`);
 				// 命令执行完毕后显示新的提示符
-				terminal.write('$ ')
-				break
+				terminal.write('$ ');
+				break;
 		}
-	}, 300)
-}
+	}, 300);
+};
 
 // 给命令添加颜色（保留此函数以备将来使用）
 const colorizeCommand = (cmd: string): string => {
-	const parts = cmd.trim().split(' ')
-	if (parts.length === 0) return cmd
+	const parts = cmd.trim().split(' ');
+	if (parts.length === 0) return cmd;
 
 	// 第一个单词（命令）用绿色
-	let colored = `\x1b[32m${parts[0]}\x1b[0m`
+	let colored = `\x1b[32m${parts[0]}\x1b[0m`;
 
 	// 其他单词（参数）用黄色
 	for (let i = 1; i < parts.length; i++) {
-		colored += ` \x1b[33m${parts[i]}\x1b[0m`
+		colored += ` \x1b[33m${parts[i]}\x1b[0m`;
 	}
 
-	return colored
-}
+	return colored;
+};
 
 // 处理回车键
 const handleEnter = () => {
 	if (command.value) {
-		terminal.writeln('')
-		executeCommand(command.value)
-		command.value = ''
-		terminal.write('$ ')
+		terminal.writeln('');
+		executeCommand(command.value);
+		command.value = '';
+		terminal.write('$ ');
 	}
-}
+};
 
 // 处理清除终端
 const handleClear = () => {
-	terminal.clear()
-	terminal.writeln('Welcome to Xterm.js Terminal Demo')
-	terminal.writeln('Type commands below:')
-	terminal.writeln('')
-	terminal.write('$ ')
-}
+	terminal.clear();
+	terminal.writeln('Welcome to Xterm.js Terminal Demo');
+	terminal.writeln('Type commands below:');
+	terminal.writeln('');
+	terminal.write('$ ');
+};
 
 // 处理发送命令
 const handleSendCommand = (cmd: string) => {
-	command.value = cmd
-	handleEnter()
-}
+	command.value = cmd;
+	handleEnter();
+};
 </script>
 
 <style scoped>
