@@ -8,5 +8,9 @@ export const useCounterStore = defineStore('counter', () => {
     count.value++
   }
 
+  setTimeout(() => {
+    count.value = 10
+  },5000)
+
   return { count, doubleCount, increment }
 })

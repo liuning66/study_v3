@@ -41,7 +41,6 @@ import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
 import { Refresh, Document, Location } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
 
 // 终端引用
 const terminalRef = ref<HTMLElement>();

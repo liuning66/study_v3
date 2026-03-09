@@ -1,19 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Xtermal from '../components/Xtermal.vue'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
 		{
 			path: '/',
-			redirect: '/xtermal',
+			redirect: '/grammer',
 		},
 		{
 			path: '/xtermal',
 			name: 'xtermal',
-			component: Xtermal,
+			component: () => import('../components/Xtermal.vue'),
+		},
+		{
+			path: '/grammer',
+			name: 'grammer',
+			component: () => import('../views/Grammar.vue'),
 		},
 	],
-})
+});
 
-export default router
+export default router;
