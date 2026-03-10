@@ -17,6 +17,11 @@ const router = createRouter({
 			name: 'grammer',
 			component: () => import('../views/Grammar.vue'),
 		},
+		{
+			path: '/orgstructure',
+			name: 'orgstructure',
+			component: () => import('../views/OrgStructure.vue'),
+		}
 	],
 });
 

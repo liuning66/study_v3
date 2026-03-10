@@ -64,7 +64,6 @@ onMounted(() => {
 				background: '#1e1e1e',
 				foreground: '#d4d4d4',
 				cursor: '#ffffff',
-				selection: 'rgba(255, 255, 255, 0.3)',
 				black: '#000000',
 				red: '#f48771',
 				green: '#57ab5a',
